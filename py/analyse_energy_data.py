@@ -6,6 +6,7 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.dates import date2num
+from scipy.stats import pearsonr
 
 pd.set_option('max_rows', 30)
 
@@ -47,6 +48,15 @@ def sumConsumpVsTemp(daily_frame):
     plt.title('Total Consumption vs Average Temperature', fontsize='large')
     plt.tight_layout()
 
+def gasTempCorrelationPlot(daily_frame):
+    daily_gas = daily_frame['gas_consumption', 'sum']
+    daily_temp = daily_frame['temperature', 'mean']
+    p_corr_coeff, p_value = pearsonr(daily_gas, daily_temp)
+    fig = plt.scatter(daily_gas, daily_temp)
+    plt.xlabel('Total daily gas consumption (kWh)')
+    plt.ylabel('Mean daily temperature (C)')
+    plt.text(0.8, 0.8, r'$\rho = $' + str(round(p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+
 proj_dir = os.path.join(os.environ['HOME'], 'Energy/')
 csv_dir = os.path.join(proj_dir, 'csv/')
 image_dir = os.path.join(proj_dir, 'images/')
@@ -58,5 +68,3 @@ agg_frame = weekday_frame[['read_time', 'gas_consumption', 'electricity_consumpt
 
 daily_frame = complete_frame[['read_date', 'gas_consumption', 'electricity_consumption', 'temperature']].groupby('read_date').agg(['sum', 'mean', 'std'])
 daily_frame.index = [dt.datetime.strptime(dfi, '%Y-%m-%d')for dfi in daily_frame.index]
-
-# TODO Statistical tests, correlation of Gas and Temperature

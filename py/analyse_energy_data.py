@@ -1,5 +1,8 @@
 import os
-execfile(os.path.join(os.environ['HOME'], '.pythonrc'))
+try:
+    execfile(os.path.join(os.environ['HOME'], '.pythonrc'))
+except Exception as e:
+    print(e)
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -54,14 +57,15 @@ def gasTempCorrelationPlot(daily_frame):
     daily_temp = daily_frame['temperature', 'mean']
     gas_p_corr_coeff, gas_p_value = pearsonr(daily_gas, daily_temp)
     elec_p_corr_coeff, elec_p_value = pearsonr(daily_elec, daily_temp)
-    fig = plt.scatter(daily_gas, daily_temp)
-    plt.scatter(daily_elec, daily_temp)
-    plt.xlabel('Total daily power consumption (kWh)')
-    plt.ylabel('Mean daily temperature (C)')
+    fig = plt.scatter(daily_temp, daily_gas, label='Gas Power')
+    plt.scatter(daily_temp, daily_elec, label='Electric Power')
+    plt.ylabel('Total daily power consumption (kWh)')
+    plt.xlabel('Mean daily temperature (C)')
     plt.text(0.8, 0.82, r'Gas $\rho = $' + str(round(gas_p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
-    plt.text(0.8, 0.75, r'Gas p value = ' + str(round(gas_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.75, r'Gas p-value = ' + str(round(gas_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
     plt.text(0.8, 0.68, r'Electricity $\rho = $' + str(round(elec_p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
-    plt.text(0.8, 0.61, r'Electricity p value = ' + str(round(elec_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.61, r'Electricity p-value = ' + str(round(elec_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.legend()
 
 proj_dir = os.path.join(os.environ['HOME'], 'Energy/')
 csv_dir = os.path.join(proj_dir, 'csv/')

@@ -50,12 +50,18 @@ def sumConsumpVsTemp(daily_frame):
 
 def gasTempCorrelationPlot(daily_frame):
     daily_gas = daily_frame['gas_consumption', 'sum']
+    daily_elec = daily_frame['electricity_consumption', 'sum']
     daily_temp = daily_frame['temperature', 'mean']
-    p_corr_coeff, p_value = pearsonr(daily_gas, daily_temp)
+    gas_p_corr_coeff, gas_p_value = pearsonr(daily_gas, daily_temp)
+    elec_p_corr_coeff, elec_p_value = pearsonr(daily_elec, daily_temp)
     fig = plt.scatter(daily_gas, daily_temp)
-    plt.xlabel('Total daily gas consumption (kWh)')
+    plt.scatter(daily_elec, daily_temp)
+    plt.xlabel('Total daily power consumption (kWh)')
     plt.ylabel('Mean daily temperature (C)')
-    plt.text(0.8, 0.8, r'$\rho = $' + str(round(p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.82, r'Gas $\rho = $' + str(round(gas_p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.75, r'Gas p value = ' + str(round(gas_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.68, r'Electricity $\rho = $' + str(round(elec_p_corr_coeff, 3)), ha='center', va='center', transform=fig.axes.transAxes)
+    plt.text(0.8, 0.61, r'Electricity p value = ' + str(round(elec_p_value, 3)), ha='center', va='center', transform=fig.axes.transAxes)
 
 proj_dir = os.path.join(os.environ['HOME'], 'Energy/')
 csv_dir = os.path.join(proj_dir, 'csv/')

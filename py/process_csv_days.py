@@ -1,18 +1,19 @@
 """
 Script for reading in all the energy files and all the weather files.
 Then joining the two together.
+
+When editing including the following lines are useful
+    execfile(os.path.join(os.environ['HOME'], '.pythonrc'))
+    pd.set_option('max_rows', 30)
 """
 import os
-execfile(os.path.join(os.environ['HOME'], '.pythonrc'))
 import numpy as np
 import pandas as pd
 import datetime as dt
 import glob
 
-pd.set_option('max_rows', 30)
-
-proj_dir = os.path.join(os.environ['HOME'], 'Energy/')
-csv_dir = os.path.join(proj_dir, 'csv/')
+proj_dir = os.path.join(os.environ['HOME'], 'Energy')
+csv_dir = os.path.join(proj_dir, 'csv')
 
 raw_file_list = glob.glob(csv_dir + "EDFEnergy*.csv") # requires naming convention
 raw_data_frame = pd.concat((pd.read_csv(f) for f in raw_file_list), ignore_index=True)
@@ -32,3 +33,4 @@ full_data_frame = raw_data_frame.merge(weather_frame, how='left', on='read_datet
 full_data_frame = full_data_frame.fillna(method='ffill') # NB forward fill to fill nulls in weather data.
 
 full_data_frame.to_csv(os.path.join(csv_dir, 'complete_data.csv'), index=False)
+# TODO try to remove globals altogether.

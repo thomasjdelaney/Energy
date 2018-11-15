@@ -11,10 +11,10 @@ import os
 import pandas as pd
 import datetime as dt
 
-proj_dir = os.path.join(os.environ['HOME'], 'Energy/')
-py_dir = os.path.join(proj_dir, 'py/')
-csv_dir = os.path.join(proj_dir, 'csv/')
-image_dir = os.path.join(proj_dir, 'images/')
+proj_dir = os.path.join(os.environ['HOME'], 'Energy')
+py_dir = os.path.join(proj_dir, 'py')
+csv_dir = os.path.join(proj_dir, 'csv')
+image_dir = os.path.join(proj_dir, 'images')
 
 sys.path.append(py_dir)
 from plottingfunctions import *
